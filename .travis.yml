@@ -94,6 +94,15 @@ install:
   - yarn --version
   - npx envinfo
   - yarn install --pure-lockfile
+  - npm uninstall typescript --no-save
+  - npm uninstall tslint --no-save
+  - npm install
+  - npm install -g codecov
+  - npm install -g request
+script:
+  - npm t
+  - codecov -f ./coverage/coverage-final.json
+  - node request.js
 notifications:
   email:
     on_success: never
