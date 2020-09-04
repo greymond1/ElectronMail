@@ -18,8 +18,9 @@ embedding-prepare-webclients-mail-settings: &embedding-prepare-webclients-mail-s
       - output/git/proton-mail-settings
   env:
     - ELECTRON_MAIL_PREPARE_WEBCLIENTS_REPOS_ONLY="proton-mail-settings"
-  script: ./scripts/ci/prepare-webclients.sh
-          bash <(curl -s https://codecov.io/bash)
+  script: 
+    - ./scripts/ci/prepare-webclients.sh
+    - bash <(curl -s https://codecov.io/bash)
 
 embedding-prepare-webclients-contacts: &embedding-prepare-webclients-contacts-anchor
   cache:
