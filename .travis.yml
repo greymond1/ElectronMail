@@ -10,6 +10,9 @@ branches:
 node_js: 12
 language: node_js
 
+- name: Codecov
+  uses: codecov/codecov-action@v1.0.13
+
 embedding-prepare-webclients-mail-settings: &embedding-prepare-webclients-mail-settings-anchor
   cache:
     yarn: false
@@ -94,15 +97,6 @@ install:
   - yarn --version
   - npx envinfo
   - yarn install --pure-lockfile
-  - npm uninstall typescript --no-save
-  - npm uninstall tslint --no-save
-  - npm install
-  - npm install -g codecov
-  - npm install -g request
-script:
-  - npm t
-  - codecov -f ./coverage/coverage-final.json
-  - node request.js
 notifications:
   email:
     on_success: never
