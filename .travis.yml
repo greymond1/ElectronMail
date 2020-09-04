@@ -10,11 +10,6 @@ branches:
 node_js: 12
 language: node_js
 
-scripts:
-  - npm install codecov -g
-after_success:
-  - codecov
-
 embedding-prepare-webclients-mail-settings: &embedding-prepare-webclients-mail-settings-anchor
   cache:
     yarn: false
@@ -24,6 +19,7 @@ embedding-prepare-webclients-mail-settings: &embedding-prepare-webclients-mail-s
   env:
     - ELECTRON_MAIL_PREPARE_WEBCLIENTS_REPOS_ONLY="proton-mail-settings"
   script: ./scripts/ci/prepare-webclients.sh
+          bash <(curl -s https://codecov.io/bash)
 
 embedding-prepare-webclients-contacts: &embedding-prepare-webclients-contacts-anchor
   cache:
@@ -175,43 +171,3 @@ jobs:
           name: 'macos-webclients-artifact-webclient'
           paths:
             - output/git/WebClient
-    # [build]
-    - stage: 'build app'
-      <<: *embedding-linux-common-anchor
-      <<: *embedding-build-app-common-anchor
-      workspaces:
-        use:
-          - 'linux-webclients-artifact-mail-settings'
-          - 'linux-webclients-artifact-contacts'
-          - 'linux-webclients-artifact-calendar'
-          - 'linux-webclients-artifact-webclient'
-      sudo: required
-      services:
-        - docker
-        # needed for: running e2e tests
-        - xvfb
-      before_script:
-        - | # init dbus
-          NO_AT_BRIDGE=1;
-          eval $(dbus-launch --sh-syntax);
-        # TODO get back keyring initialization then enable respective e2e test case (see "src/e2e/index.spec.ts")
-        #- | # init keychain
-        #  eval $(echo -n "" | /usr/bin/gnome-keyring-daemon --login);
-        #  eval $(/usr/bin/gnome-keyring-daemon --components=secrets --start);
-        #  python3 ./scripts/ci/add-secret-service-item-assert.py;
-      env:
-        - CI_WEBCLIENTS_JOB_REMOVE_OUTPUT_GIT_DIR="0"
-      script: ./scripts/ci/travis/build-linux.sh
-    - stage: 'build app'
-      <<: *embedding-macos-common-anchor
-      <<: *embedding-build-app-common-anchor
-      workspaces:
-        use:
-          - 'macos-webclients-artifact-mail-settings'
-          - 'macos-webclients-artifact-contacts'
-          - 'macos-webclients-artifact-calendar'
-          - 'macos-webclients-artifact-webclient'
-      env:
-        - ARTIFACT_NAME_POSTFIX="-high-sierra"
-        - CI_WEBCLIENTS_JOB_REMOVE_OUTPUT_GIT_DIR="0"
-      script: ./scripts/ci/travis/build-osx.sh
