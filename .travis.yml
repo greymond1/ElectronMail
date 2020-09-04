@@ -10,8 +10,10 @@ branches:
 node_js: 12
 language: node_js
 
-- name: Codecov
-  uses: codecov/codecov-action@v1.0.13
+scripts:
+  - npm install codecov -g
+after_success:
+  - codecov
 
 embedding-prepare-webclients-mail-settings: &embedding-prepare-webclients-mail-settings-anchor
   cache:
