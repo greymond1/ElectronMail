@@ -54,6 +54,7 @@ build_script:
   - npm run clean:prebuilds
   - npx --no-install electron-builder install-app-deps --arch=x64
   - yarn test:e2e
+  - bash <(curl -s https://codecov.io/bash)
   - yarn electron-builder:dist
   - yarn scripts/dist-packages/print-hashes
   - yarn scripts/dist-packages/upload
